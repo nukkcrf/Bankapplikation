@@ -4,6 +4,7 @@ using BankApp1.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using BankApp1.Models;
+using BankApp1.DTOs;
 
 namespace BankApp1.Controllers
 {
@@ -84,6 +85,65 @@ namespace BankApp1.Controllers
                 return StatusCode(500, $"A server error occurred: {ex.Message}");
             }
         }
+        [HttpPost("transfer")]
+        public async Task<IActionResult> Transfer([FromBody] TransferRequest request)
+        {
+            try
+            {
+                if (request.Amount <= 0)
+                    return BadRequest("Amount must be greater than zero.");
+                if (request.FromAccountId == request.ToAccountId)
+                    return BadRequest("Cannot transfer to the same account.");
+
+                var fromAccount = await _context.Accounts.FindAsync(request.FromAccountId);
+                var toAccount = await _context.Accounts.FindAsync(request.ToAccountId);
+
+                if (fromAccount == null || toAccount == null)
+                    return NotFound("One or both accounts not found.");
+
+                if (fromAccount.Balance < request.Amount)
+                    return BadRequest("Insufficient funds.");
+
+                // Retragere
+                fromAccount.Balance -= request.Amount;
+                var withdrawTransaction = new Transaction
+                {
+                    AccountId = fromAccount.AccountId,
+                    Amount = -request.Amount,
+                    Date = DateOnly.FromDateTime(DateTime.Now),
+                    Operation = "Transfer out",
+                    Type = "Debit",
+                    Balance = fromAccount.Balance
+                };
+
+                // Depunere
+                toAccount.Balance += request.Amount;
+                var depositTransaction = new Transaction
+                {
+                    AccountId = toAccount.AccountId,
+                    Amount = request.Amount,
+                    Date = DateOnly.FromDateTime(DateTime.Now),
+                    Operation = "Transfer in",
+                    Type = "Credit",
+                    Balance = toAccount.Balance
+                };
+
+                _context.Transactions.AddRange(withdrawTransaction, depositTransaction);
+                await _context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    message = "Transfer successful",
+                    fromAccountNewBalance = fromAccount.Balance,
+                    toAccountNewBalance = toAccount.Balance
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"A server error occurred: {ex.Message}");
+            }
+        }
+
 
     }
 }
