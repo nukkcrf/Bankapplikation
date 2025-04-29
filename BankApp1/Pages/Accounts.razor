@@ -1,0 +1,59 @@
+﻿@page "/accounts"
+@using BankApp1.Models
+@inject AccountService AccountService
+
+
+<h3>Accounts</h3>
+
+<h4>Transfer Funds</h4>
+<div class="transfer-box">
+   <Component />
+   <input type="number" @bind="fromId" />
+
+   <label>To Account ID:</label>
+   <input type="number" @bind="toId" />
+
+   <label>Amount:</label>
+   <input type="number" step="0.01" @bind="transferAmount" />
+
+   <button @onclick="Transfer">Transfer</button>
+</div>
+
+<h4>Account List</h4>
+<table class="table">
+   <thead>
+       <tr>
+           <th>Account ID</th>
+           <th>Account Name</th>
+           <th>Balance</th>
+       </tr>
+   </thead>
+   <tbody>
+       @foreach (var account in accounts)
+       {
+           <tr>
+               <td>@account.Id</td>
+               <td>@account.Name</td>
+               <td>@account.Balance</td>
+           </tr>
+       }
+   </tbody>
+</table>
+
+@code {
+   private int fromId;
+   private int toId;
+   private decimal transferAmount;
+   private List<Account> accounts = new List<Account>();
+
+   protected override async Task OnInitializedAsync()
+   {
+       accounts = await AccountService.GetAccountsAsync();
+   }
+
+   private async Task Transfer()
+   {
+       await AccountService.TransferAsync(fromId, toId, transferAmount);
+       accounts = await AccountService.GetAccountsAsync(); // update accounts after transfer
+   }
+}

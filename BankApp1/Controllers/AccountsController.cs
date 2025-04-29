@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using BankApp1.Models;
 using BankApp1.DTOs;
+using Microsoft.Identity.Client;
+using Azure.Core;
+
 
 namespace BankApp1.Controllers
 {
@@ -21,21 +24,21 @@ namespace BankApp1.Controllers
 
         // POST: api/accounts/123/deposit
         [HttpPost("{id}/deposit")]
-        public async Task<IActionResult> Deposit(int id, [FromBody] decimal amount)
+        public async Task<IActionResult> Deposit(int id, [FromBody] AmountRequest request)
         {
-            if (amount <= 0)
+            if (request.Amount <= 0)
                 return BadRequest("Amount must be greater than zero.");
 
             var account = await _context.Accounts.FindAsync(id);
             if (account == null)
                 return NotFound("Account not found.");
 
-            account.Balance += amount;
+            account.Balance += request.Amount;
 
             var transaction = new Transaction
             {
                 AccountId = id,
-                Amount = amount,
+                Amount = request.Amount,
                 Date = DateOnly.FromDateTime(DateTime.Now),
                 Operation = "Deposit",
                 Type = "Credit",
@@ -47,28 +50,29 @@ namespace BankApp1.Controllers
 
             return Ok(new { message = "Deposit successful", newBalance = account.Balance });
         }
+
         // POST: api/accounts/123/withdraw
         [HttpPost("{id}/withdraw")]
-        public async Task<IActionResult> Withdraw(int id, [FromBody] decimal amount)
+        public async Task<IActionResult> Withdraw(int id, [FromBody] AmountRequest amount)
         {
             try
             {
-                if (amount <= 0)
+                if (amount.Amount <= 0)
                     return BadRequest("Amount must be greater than zero.");
 
                 var account = await _context.Accounts.FindAsync(id);
                 if (account == null)
                     return NotFound("Account not found.");
 
-                if (account.Balance < amount)
+                if (account.Balance < amount.Amount)
                     return BadRequest("Insufficient funds.");
 
-                account.Balance -= amount;
+                account.Balance -= amount.Amount;
 
                 var transaction = new Transaction
                 {
                     AccountId = id,
-                    Amount = -amount, // important: retragerile sunt negative
+                    Amount = -amount.Amount, 
                     Date = DateOnly.FromDateTime(DateTime.Now),
                     Operation = "Withdraw",
                     Type = "Debit",
@@ -85,6 +89,15 @@ namespace BankApp1.Controllers
                 return StatusCode(500, $"A server error occurred: {ex.Message}");
             }
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAccount(int id)
+        {
+            var account = await _context.Accounts.FindAsync(id);
+            if (account == null)
+                return NotFound("Account not found.");
+            return Ok(account);
+        }
+
         [HttpPost("transfer")]
         public async Task<IActionResult> Transfer([FromBody] TransferRequest request)
         {
@@ -104,7 +117,7 @@ namespace BankApp1.Controllers
                 if (fromAccount.Balance < request.Amount)
                     return BadRequest("Insufficient funds.");
 
-                // Retragere
+                // Widraw
                 fromAccount.Balance -= request.Amount;
                 var withdrawTransaction = new Transaction
                 {
@@ -116,7 +129,7 @@ namespace BankApp1.Controllers
                     Balance = fromAccount.Balance
                 };
 
-                // Depunere
+                // Deposit
                 toAccount.Balance += request.Amount;
                 var depositTransaction = new Transaction
                 {
