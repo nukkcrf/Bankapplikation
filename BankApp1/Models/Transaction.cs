@@ -9,23 +9,12 @@ namespace BankApp1.Models;
 [Index("AccountId", Name = "IX_Transactions_AccountId")]
 public partial class Transaction
 {
-    [Key]
     public int TransactionId { get; set; }
-
     public int AccountId { get; set; }
-
-    public DateOnly Date { get; set; }
-
-    [StringLength(50)]
-    public string Type { get; set; } = null!;
-
-    [StringLength(50)]
-    public string Operation { get; set; } = null!;
-
-    [Column(TypeName = "decimal(13, 2)")]
     public decimal Amount { get; set; }
-
-    [Column(TypeName = "decimal(13, 2)")]
+    public string Type { get; set; }
+    public string Operation { get; set; }
+    public DateTime Date { get; set; }
     public decimal Balance { get; set; }
 
     [StringLength(50)]
@@ -34,10 +23,4 @@ public partial class Transaction
     [StringLength(50)]
     public string? Bank { get; set; }
 
-    [StringLength(50)]
-    public string? Account { get; set; }
 
-    [ForeignKey("AccountId")]
-    [InverseProperty("Transactions")]
-    public virtual Account AccountNavigation { get; set; } = null!;
-}
