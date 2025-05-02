@@ -11,6 +11,10 @@ namespace BankApp1
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddHttpClient<AccountService>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:7137/"); // adresa API-ului tău
+            });
 
             // Pentru ASP.NET Core 6+/7+ (Program.cs)
             builder.Services.AddDbContext<BankContext>(options =>

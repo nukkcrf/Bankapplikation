@@ -5,8 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using BankApp1.Models;
 using BankApp1.DTOs;
-using Microsoft.Identity.Client;
-using Azure.Core;
+
 
 
 namespace BankApp1.Controllers
@@ -20,6 +19,12 @@ namespace BankApp1.Controllers
         public AccountsController(BankContext context)
         {
             _context = context;
+        }
+        // GET: api/accounts
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Account>>> GetAccounts()
+        {
+            return await _context.Accounts.ToListAsync();
         }
 
         // POST: api/accounts/123/deposit
@@ -39,7 +44,7 @@ namespace BankApp1.Controllers
             {
                 AccountId = id,
                 Amount = request.Amount,
-                Date = DateOnly.FromDateTime(DateTime.Now),
+                Date = DateTime.Now,
                 Operation = "Deposit",
                 Type = "Credit",
                 Balance = account.Balance
@@ -73,7 +78,7 @@ namespace BankApp1.Controllers
                 {
                     AccountId = id,
                     Amount = -amount.Amount, 
-                    Date = DateOnly.FromDateTime(DateTime.Now),
+                    Date = DateTime.Now,
                     Operation = "Withdraw",
                     Type = "Debit",
                     Balance = account.Balance
@@ -95,6 +100,7 @@ namespace BankApp1.Controllers
             var account = await _context.Accounts.FindAsync(id);
             if (account == null)
                 return NotFound("Account not found.");
+
             return Ok(account);
         }
 
@@ -123,7 +129,7 @@ namespace BankApp1.Controllers
                 {
                     AccountId = fromAccount.AccountId,
                     Amount = -request.Amount,
-                    Date = DateOnly.FromDateTime(DateTime.Now),
+                    Date = DateTime.Now,
                     Operation = "Transfer out",
                     Type = "Debit",
                     Balance = fromAccount.Balance
@@ -135,7 +141,7 @@ namespace BankApp1.Controllers
                 {
                     AccountId = toAccount.AccountId,
                     Amount = request.Amount,
-                    Date = DateOnly.FromDateTime(DateTime.Now),
+                    Date = DateTime.Now,
                     Operation = "Transfer in",
                     Type = "Credit",
                     Balance = toAccount.Balance
