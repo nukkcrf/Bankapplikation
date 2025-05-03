@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BankApp1.Models;
 
-public partial class Account
+public class Account
 {
     [Key]
     public int AccountId { get; set; }

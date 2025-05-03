@@ -1,49 +1,51 @@
-﻿
-using BankApp1.DTOs;
+﻿using BankApp1.DTOs;
 using BankApp.Client.Models;
 using System.Net.Http.Json;
 using BankApp1.Models;
 
-public class AccountService
+namespace BankApp.Client.Services // <- adaugă namespace-ul aici
 {
-    private readonly HttpClient _http;
-
-    public AccountService(HttpClient http)
+    public class AccountService
     {
-        _http = http;
-    }
+        private readonly HttpClient _http;
 
-    public async Task<List<Account>> GetAccountsAsync()
-    {
-        return await _http.GetFromJsonAsync<List<Account>>("api/accounts");
-    }
-
-    public async Task DepositAsync(int accountId, decimal amount)
-    {
-        var request = new AmountRequest { Amount = amount };
-        await _http.PostAsJsonAsync($"api/accounts/{accountId}/deposit", request);
-    }
-
-    public async Task WithdrawAsync(int accountId, decimal amount)
-    {
-        var request = new AmountRequest { Amount = amount };
-        await _http.PostAsJsonAsync($"api/accounts/{accountId}/withdraw", request);
-    }
-
-    public async Task TransferAsync(int fromId, int toId, decimal amount)
-    {
-        var request = new TransferRequest
+        public AccountService(HttpClient http)
         {
-            FromAccountId = fromId,
-            ToAccountId = toId,
-            Amount = amount
-        };
+            _http = http;
+        }
 
-        await _http.PostAsJsonAsync("api/accounts/transfer", request);
-    }
-    public async Task<List<Transaction>> GetTransactionsAsync()
-    {
-        return await _http.GetFromJsonAsync<List<Transaction>>("api/transactions");
-    }
+        public async Task<List<Account>> GetAccountsAsync()
+        {
+            return await _http.GetFromJsonAsync<List<Account>>("api/accounts");
+        }
 
+        public async Task DepositAsync(int accountId, decimal amount)
+        {
+            var request = new AmountRequest { Amount = amount };
+            await _http.PostAsJsonAsync($"api/accounts/{accountId}/deposit", request);
+        }
+
+        public async Task WithdrawAsync(int accountId, decimal amount)
+        {
+            var request = new AmountRequest { Amount = amount };
+            await _http.PostAsJsonAsync($"api/accounts/{accountId}/withdraw", request);
+        }
+
+        public async Task TransferAsync(int fromId, int toId, decimal amount)
+        {
+            var request = new TransferRequest
+            {
+                FromAccountId = fromId,
+                ToAccountId = toId,
+                Amount = amount
+            };
+
+            await _http.PostAsJsonAsync("api/accounts/transfer", request);
+        }
+
+        public async Task<List<Transaction>> GetTransactionsAsync()
+        {
+            return await _http.GetFromJsonAsync<List<Transaction>>("api/transactions");
+        }
+    }
 }

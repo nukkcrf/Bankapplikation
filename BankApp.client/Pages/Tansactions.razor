@@ -1,0 +1,50 @@
+﻿@page "/transactions"
+@using BankApp.Client.Models
+
+@inject AccountService AccountService
+
+<h3>Transactions</h3>
+
+@if (transactions == null)
+{
+    <p>Loading transactions...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Transaction ID</th>
+                <th>Account ID</th>
+                <th>Amount</th>
+                <th>Type</th>
+                <th>Operation</th>
+                <th>Date</th>
+                <th>Balance After</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tx in transactions)
+            {
+                <tr>
+                    <td>@tx.TransactionId</td>
+                    <td>@tx.AccountId</td>
+                    <td>@tx.Amount</td>
+                    <td>@tx.Type</td>
+                    <td>@tx.Operation</td>
+                    <td>@tx.Date.ToShortDateString()</td>
+                    <td>@tx.Balance</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Transaction> transactions;
+
+    protected override async Task OnInitializedAsync()
+    {
+        transactions = await AccountService.GetTransactionsAsync();
+    }
+}

@@ -8,50 +8,50 @@
 <h4>Transfer Funds</h4>
 <div class="transfer-box">
     <label>From Account ID:</label>
-   <input type="number" @bind="fromId" />
+    <input type="number" @bind="fromId" />
 
-   <label>To Account ID:</label>
-   <input type="number" @bind="toId" />
+    <label>To Account ID:</label>
+    <input type="number" @bind="toId" />
 
-   <label>Amount:</label>
-   <input type="number" step="0.01" @bind="transferAmount" />
+    <label>Amount:</label>
+    <input type="number" step="0.01" @bind="transferAmount" />
 
-   <button @onclick="Transfer">Transfer</button>
+    <button @onclick="Transfer">Transfer</button>
 </div>
 
 <h4>Account List</h4>
 <table class="table">
-   <thead>
-       <tr>
-           <th>Account ID</th>
-           <th>Balance</th>
-       </tr>
-   </thead>
-   <tbody>
+    <thead>
+        <tr>
+            <th>Account ID</th>
+            <th>Balance</th>
+        </tr>
+    </thead>
+    <tbody>
         @foreach (var acc in accountList)
-       {
-           <tr>
+        {
+            <tr>
                 <td>@acc.AccountId</td>
                 <td>@acc.Balance</td>
-           </tr>
-       }
-   </tbody>
+            </tr>
+        }
+    </tbody>
 </table>
 
 @code {
-   private int fromId;
-   private int toId;
-   private decimal transferAmount;
+    private int fromId;
+    private int toId;
+    private decimal transferAmount;
     private List<Account> accountList = new List<Account>();
 
-   protected override async Task OnInitializedAsync()
-   {
+    protected override async Task OnInitializedAsync()
+    {
         accountList = await AccountService.GetAccountsAsync();
-   }
+    }
 
-   private async Task Transfer()
-   {
-       await AccountService.TransferAsync(fromId, toId, transferAmount);
+    private async Task Transfer()
+    {
+        await AccountService.TransferAsync(fromId, toId, transferAmount);
         accountList = await AccountService.GetAccountsAsync();
-   }
+    }
 }
