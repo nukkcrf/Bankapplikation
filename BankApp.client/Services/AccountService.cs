@@ -1,7 +1,8 @@
 ﻿
 using BankApp1.DTOs;
-using BankApp1.Models;
+using BankApp.Client.Models;
 using System.Net.Http.Json;
+using BankApp1.Models;
 
 public class AccountService
 {
@@ -40,4 +41,9 @@ public class AccountService
 
         await _http.PostAsJsonAsync("api/accounts/transfer", request);
     }
+    public async Task<List<Transaction>> GetTransactionsAsync()
+    {
+        return await _http.GetFromJsonAsync<List<Transaction>>("api/transactions");
+    }
+
 }

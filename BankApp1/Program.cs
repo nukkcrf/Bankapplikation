@@ -13,10 +13,9 @@ namespace BankApp1
             // Add services to the container.
             builder.Services.AddHttpClient<AccountService>(client =>
             {
-                client.BaseAddress = new Uri("https://localhost:7137/"); // adresa API-ului tău
+                client.BaseAddress = new Uri("https://localhost:7137/"); 
             });
 
-            // Pentru ASP.NET Core 6+/7+ (Program.cs)
             builder.Services.AddDbContext<BankContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -27,7 +26,6 @@ namespace BankApp1
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

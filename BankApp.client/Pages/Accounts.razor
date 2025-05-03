@@ -1,13 +1,13 @@
 ﻿@page "/accounts"
-@using BankApp1.Models
+@using BankApp.Client.Models
+@using BankApp1.DTOs
 @inject AccountService AccountService
-
 
 <h3>Accounts</h3>
 
 <h4>Transfer Funds</h4>
 <div class="transfer-box">
-   <Component />
+    <label>From Account ID:</label>
    <input type="number" @bind="fromId" />
 
    <label>To Account ID:</label>
@@ -24,17 +24,15 @@
    <thead>
        <tr>
            <th>Account ID</th>
-           <th>Account Name</th>
            <th>Balance</th>
        </tr>
    </thead>
    <tbody>
-       @foreach (var account in accounts)
+        @foreach (var acc in accountList)
        {
            <tr>
-               <td>@account.Id</td>
-               <td>@account.Name</td>
-               <td>@account.Balance</td>
+                <td>@acc.AccountId</td>
+                <td>@acc.Balance</td>
            </tr>
        }
    </tbody>
@@ -44,16 +42,16 @@
    private int fromId;
    private int toId;
    private decimal transferAmount;
-   private List<Account> accounts = new List<Account>();
+    private List<Account> accountList = new List<Account>();
 
    protected override async Task OnInitializedAsync()
    {
-       accounts = await AccountService.GetAccountsAsync();
+        accountList = await AccountService.GetAccountsAsync();
    }
 
    private async Task Transfer()
    {
        await AccountService.TransferAsync(fromId, toId, transferAmount);
-       accounts = await AccountService.GetAccountsAsync(); // update accounts after transfer
+        accountList = await AccountService.GetAccountsAsync();
    }
 }
