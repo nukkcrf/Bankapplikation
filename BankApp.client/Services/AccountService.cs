@@ -3,7 +3,7 @@ using BankApp.Client.Models;
 using System.Net.Http.Json;
 using BankApp1.Models;
 
-namespace BankApp.Client.Services // <- adaugă namespace-ul aici
+namespace BankApp.Client.Services
 {
     public class AccountService
     {
