@@ -1,8 +1,7 @@
-﻿using BankApp1.DTOs;
-using BankApp.Client.Models;
+﻿using BankApp.Client.Models;
 using BankApp.Client.DTOs;
 using System.Net.Http.Json;
-using BankApp1.Models;
+
 
 namespace BankApp.Client.Services
 {

@@ -16,8 +16,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BankApp1\BankApp1.csproj" />
-  </ItemGroup>
-
 </Project>
