@@ -1,7 +1,7 @@
 
-# 🏦 BankApp – Ett enkelt banksystem med Blazor och Web API
+#  BankApp – Ett enkelt banksystem med Blazor och Web API
 
-## 📋 Beskrivning
+## Beskrivning
 
 Detta projekt är en demo av ett enkelt banksystem där användare kan:
 
@@ -14,7 +14,7 @@ Applikationen är uppdelad i två delar:
 - **BankApp.API** – backend med ASP.NET Core Web API och Entity Framework Core
 - **BankApp.Client** – frontend i Blazor WebAssembly
 
-## 🧱 Tekniker som används
+##  Tekniker som används
 
 - ASP.NET Core 7
 - Entity Framework Core
@@ -22,7 +22,7 @@ Applikationen är uppdelad i två delar:
 - SQL Server (LocalDB)
 - REST API (JSON)
 
-## 🚀 Funktioner
+## Funktioner
 
 - Kontooperationer (insättning, uttag, saldo)
 - Överföring mellan konton
@@ -30,7 +30,7 @@ Applikationen är uppdelad i två delar:
 - API med full CRUD
 - Modern frontend i Blazor
 
-## 📂 Struktur
+##Struktur
 
 ```
 BankApp/
@@ -39,7 +39,7 @@ BankApp/
 ├── README.md            // Den här filen
 ```
 
-## 🛠️ Kör lokalt
+##  Kör lokalt
 
 1. Klona detta repo:
 ```bash
@@ -51,6 +51,6 @@ git clone https://github.com/ditt-användarnamn/bankapp.git
 
 3. Starta både `BankApp.API` och `BankApp.Client` i Visual Studio
 
-## 👤 Författare
+## Författare
 
 Detta projekt är skapat som en del av en inlämningsuppgift för KYH-kursen **"Nätverksteknik – Industriell och IT-säkerhet"**.
