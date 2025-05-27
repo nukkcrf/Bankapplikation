@@ -1,0 +1,109 @@
+﻿@page "/"
+@using BankBlazor.Client.Services
+@inject HolidayService HolidayService
+<PageTitle>Home</PageTitle>
+
+<section class="hero-container">
+    <div class="hero-content">
+        <img src="/images/hero.jpg" class="hero-img">
+    </div>
+</section>
+
+<section id="greeting" class="container">
+    <h2>
+        Hello Admin! The next Scottish bank holiday is
+        <strong>@holiday</strong> on <strong>@date</strong>
+    </h2>
+
+    @code {
+        private string holiday = "loading...";
+        private string date = "";
+
+        protected override async Task OnInitializedAsync()
+        {
+            var next = await HolidayService.GetNextHolidayAsync();
+            if (next != null)
+            {
+                holiday = next.Title;
+                date = DateTime.Parse(next.Date).ToString("dddd, dd MMMM yyyy");
+            }
+            else
+            {
+                holiday = "not found";
+                date = "";
+            }
+        }
+    }
+</section>
+
+<section>    
+    <button @onclick="NavigateToAccounts">View Customer Accounts</button>
+
+    @code {
+        [Inject] NavigationManager Nav { get; set; }
+        void NavigateToAccounts()
+        {
+            Nav.NavigateTo("/show_all_accounts");
+        }
+    }
+</section>
+
+<section>    
+    <button @onclick="NavigateByAccountNumber">Info By Account ID</button>
+
+    @code {
+        [Inject] NavigationManager Nav1 { get; set; }
+        void NavigateByAccountNumber()
+        {
+            Nav1.NavigateTo("/account-details");
+        }
+    }
+</section>
+
+<section>    
+    <button @onclick="NavigateToDepositWithdraw">Cash Deposit or Withdraw</button>
+
+    @code {
+        [Inject] NavigationManager Nav2 { get; set; }
+        void NavigateToDepositWithdraw()
+        {
+            Nav2.NavigateTo("/deposit_withdraw");
+        }
+    }
+</section>
+
+<section>
+    <button @onclick="NavigateToWireTransfer">Account Transfer</button>
+
+    @code {
+        [Inject] NavigationManager Nav3 { get; set; }
+        void NavigateToWireTransfer()
+        {
+            Nav3.NavigateTo("/account_transfer");
+        }
+    }
+</section>
+
+<section>
+    <button @onclick="NavigateToHistory">Transaction History</button>
+
+    @code {
+        [Inject] NavigationManager Nav4 { get; set; }
+        void NavigateToHistory()
+        {
+            Nav4.NavigateTo("/transaction-history-view");
+        }
+    }
+</section>
+
+
+ 
+
+}
+
+
+
+
+
+
+
